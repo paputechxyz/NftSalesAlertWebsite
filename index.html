@@ -684,95 +684,127 @@
           });
         });
         
-        // --- Particle System for Ocean Waves ---
+        // --- 3D Ocean Wave Mesh System ---
         const canvas = document.getElementById("particle-canvas");
         if (canvas) {
           const ctx = canvas.getContext("2d");
           let width, height;
-          let particles = [];
+          let time = 0;
           
           function resize() {
             width = canvas.clientWidth;
             height = canvas.clientHeight;
-            // Handle high DPI displays for crisp rendering
             const dpr = window.devicePixelRatio || 1;
             canvas.width = width * dpr;
             canvas.height = height * dpr;
             ctx.scale(dpr, dpr);
-            initParticles();
           }
           
           window.addEventListener("resize", resize);
-          
-          function initParticles() {
-            particles = [];
-            // Adjust density based on screen size to prevent lag
-            const density = window.innerWidth < 768 ? 8000 : 5000;
-            const numParticles = Math.floor((width * height) / density); 
-            
-            for (let i = 0; i < numParticles; i++) {
-              particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                baseY: Math.random() * height,
-                speedX: 0.5 + Math.random() * 1.5, // Flow left to right
-                size: 1 + Math.random() * 1.5,
-                waveOffset: Math.random() * Math.PI * 2,
-                waveSpeed: 0.01 + Math.random() * 0.02, // Gentle bobbing
-                waveAmplitude: 15 + Math.random() * 35 // Wave height
-              });
-            }
-          }
+          resize();
           
           function animate() {
             ctx.clearRect(0, 0, width, height);
             
-            for (let i = 0; i < particles.length; i++) {
-              let p = particles[i];
-              
-              // Move right
-              p.x += p.speedX;
-              
-              // Wave motion (Y axis)
-              p.waveOffset += p.waveSpeed;
-              p.y = p.baseY + Math.sin(p.waveOffset) * p.waveAmplitude;
-              
-              // Wrap around seamlessly
-              if (p.x > width + 50) {
-                p.x = -50;
+            time += 0.02;
+            
+            // Perspective parameters
+            const fov = 350;
+            
+            // Grid sizing
+            const spacingX = 65;
+            const spacingZ = 50;
+            const rows = 45; // Depth
+            
+            const offsetZ = -60; // Pull it closer to the camera
+            
+            // Calculate minimum scale at the far horizon to ensure we spawn enough columns to fill the screen
+            const maxZ = rows * spacingZ + offsetZ;
+            const minScale = fov / (fov + maxZ);
+            const requiredWorldWidth = width / minScale;
+            const cols = Math.ceil(requiredWorldWidth / spacingX) + 10; 
+            
+            // Center the grid horizontally
+            const offsetX = (cols * spacingX) / 2;
+            
+            // Pre-calculate all projected points for this frame
+            let points = [];
+            for (let z = 0; z < rows; z++) {
+              let rowPoints = [];
+              for (let x = 0; x < cols; x++) {
+                // Base 3D coordinates
+                let worldX = x * spacingX - offsetX;
+                let worldZ = z * spacingZ + offsetZ;
+                
+                // Prevent going behind camera
+                if (worldZ < -fov + 10) worldZ = -fov + 10;
+                
+                // Wave function
+                let wave1 = Math.sin(x * 0.1 - z * 0.1 - time * 2.5) * 45;
+                let wave2 = Math.sin(x * 0.05 - z * 0.08 - time * 1.5) * 20;
+                
+                // Increased base Y to act as a floor viewed from above
+                let worldY = 280 + wave1 + wave2; 
+                
+                // 3D perspective projection
+                let scale = fov / (fov + worldZ);
+                
+                let screenX = width / 2 + worldX * scale;
+                // Shift down so it occupies the lower part of the screen
+                let screenY = height / 2 - 120 + worldY * scale; 
+                
+                rowPoints.push({
+                  x: screenX,
+                  y: screenY,
+                  scale: scale
+                });
               }
-              
-              // Draw particle
-              ctx.fillStyle = `rgba(59, 130, 246, ${0.4 + (p.size/2.5)*0.6})`;
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-              ctx.fill();
+              points.push(rowPoints);
             }
             
-            // Draw connections to form the "ocean wave mesh" effect
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < particles.length; i++) {
-              for (let j = i + 1; j < particles.length; j++) {
-                let dx = particles[i].x - particles[j].x;
-                let dy = particles[i].y - particles[j].y;
-                let dist = dx*dx + dy*dy;
+            // Draw connections (wireframe mesh)
+            for (let z = 0; z < rows; z++) {
+              for (let x = 0; x < cols; x++) {
+                let p = points[z][x];
                 
-                // Only connect particles that are close
-                if (dist < 12000) {
-                  // Opacity fades as they get further apart
-                  let opacity = 1 - (dist / 12000);
-                  ctx.strokeStyle = `rgba(59, 130, 246, ${opacity * 0.25})`;
+                // Skip rendering if behind camera or scale too small
+                if (p.scale <= 0) continue;
+                
+                // Fade out distant lines (depth cueing)
+                let alpha = Math.min(1, Math.max(0, p.scale * 1.8 - 0.2));
+                
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = `rgba(59, 130, 246, ${alpha * 0.4})`;
+                
+                // Connect to right neighbor
+                if (x < cols - 1) {
+                  let right = points[z][x+1];
                   ctx.beginPath();
-                  ctx.moveTo(particles[i].x, particles[i].y);
-                  ctx.lineTo(particles[j].x, particles[j].y);
+                  ctx.moveTo(p.x, p.y);
+                  ctx.lineTo(right.x, right.y);
                   ctx.stroke();
                 }
+                
+                // Connect to bottom (closer) neighbor
+                if (z < rows - 1) {
+                  let bottom = points[z+1][x];
+                  ctx.beginPath();
+                  ctx.moveTo(p.x, p.y);
+                  ctx.lineTo(bottom.x, bottom.y);
+                  ctx.stroke();
+                }
+                
+                // Draw glowing node
+                ctx.fillStyle = `rgba(59, 130, 246, ${alpha * 0.8})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.8 * p.scale, 0, Math.PI * 2);
+                ctx.fill();
               }
             }
+            
             requestAnimationFrame(animate);
           }
           
-          resize();
           animate();
         }
       });
