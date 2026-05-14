@@ -62,22 +62,21 @@
       gtag("config", "G-PVL8NYK2J7");
     </script>
 
-    <link rel="stylesheet" href="styles.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
       body {
-        font-family: "Montserrat", sans-serif;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         margin: 0;
         padding: 0;
-        color: #333;
+        background-color: #0a0a0a;
+        color: #ffffff;
         line-height: 1.6;
         overscroll-behavior: none;
         overflow-x: hidden;
@@ -98,8 +97,15 @@
       }
 
       header {
-        background-color: #ffffff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(10, 10, 10, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding: 15px 5%;
         display: flex;
         justify-content: space-between;
@@ -109,20 +115,45 @@
       .logo {
         display: flex;
         align-items: center;
-        font-size: 24px;
-        font-weight: 700;
-        color: #0077cc;
+        font-size: 20px;
+        font-weight: 800;
+        color: #ffffff;
+        text-decoration: none;
+        letter-spacing: -0.5px;
+      }
+
+      .logo-img {
+        width: 32px;
+        height: 32px;
+        margin-right: 12px;
+        border-radius: 8px;
+      }
+
+      .open-app-btn {
+        background-color: #ffffff;
+        color: #000000;
+        padding: 10px 24px;
+        border-radius: 9999px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+
+      .open-app-btn:hover {
+        transform: scale(1.05);
+        background-color: #f0f0f0;
       }
 
       .hero-section {
-        padding: 80px 5%;
+        padding: 160px 5% 80px;
         text-align: center;
-        background-color: #ffffff;
+        background-color: #0a0a0a;
       }
 
       .blue-bg {
-        background-color: #0077cc;
-        color: white;
+        background: linear-gradient(180deg, #0a0a0a 0%, #111827 100%);
+        border-top: 1px solid rgba(255,255,255,0.05);
       }
 
       .blue-bg h1 {
@@ -130,19 +161,25 @@
       }
 
       .blue-bg .button {
-        background-color: #ffffff;
-        color: #0077cc;
+        background-color: #3b82f6;
+        color: #ffffff;
       }
 
       .blue-bg .button:hover {
-        background-color: #f0f0f0;
-        color: #005fa3;
+        background-color: #2563eb;
       }
 
       .hero-section h1 {
-        font-size: 42px;
-        margin-bottom: 30px;
-        color: #0077cc;
+        font-size: 56px;
+        margin-bottom: 24px;
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1.1;
+      }
+
+      .hero-section p {
+        color: #94a3b8;
       }
 
       .hero-content {
@@ -151,139 +188,154 @@
       }
 
       .button {
-        display: inline-block;
-        background-color: #0077cc;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #3b82f6;
         color: white;
-        padding: 12px 30px;
-        border-radius: 30px;
+        padding: 14px 32px;
+        border-radius: 9999px;
         text-decoration: none;
         font-weight: 600;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
       }
 
       .button:hover {
-        background-color: #005fa3;
+        background-color: #2563eb;
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 119, 204, 0.3);
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
       }
 
       .features {
-        padding: 80px 5%;
-        background-color: #0077cc;
+        padding: 100px 5%;
+        background-color: #0a0a0a;
         text-align: center;
         color: white;
       }
 
       .features h2 {
         font-size: 36px;
-        margin-bottom: 50px;
+        margin-bottom: 60px;
         color: #ffffff;
+        font-weight: 700;
+        letter-spacing: -0.5px;
       }
 
       .feature-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 30px;
-      }
-
-      .feature {
-        flex: 1 1 250px;
-        max-width: 300px;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        max-width: 1200px;
         margin: 0 auto;
       }
 
+      .feature {
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+      }
+
       .feature:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(59, 130, 246, 0.3);
       }
 
       .feature i {
-        font-size: 40px;
-        color: #ffffff;
-        margin-bottom: 20px;
+        font-size: 32px;
+        color: #3b82f6;
+        margin-bottom: 24px;
+        background: rgba(59, 130, 246, 0.1);
+        width: 64px;
+        height: 64px;
+        line-height: 64px;
+        border-radius: 16px;
       }
 
       .feature h3 {
         font-size: 20px;
         margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      .feature p {
+        color: #94a3b8;
+        font-size: 15px;
       }
 
       .how-it-works {
-        padding: 40px 5%;
-        background-color: #ffffff;
+        padding: 100px 5%;
+        background-color: #0f1115;
         text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
       }
 
       .how-it-works h2 {
         font-size: 36px;
-        margin-bottom: 50px;
-        color: #0077cc;
+        margin-bottom: 60px;
+        color: #ffffff;
+        font-weight: 700;
+        letter-spacing: -0.5px;
       }
 
       .steps-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 30px;
         max-width: 1000px;
         margin: 0 auto;
       }
 
       .step {
-        flex: 1;
-        padding: 20px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        width: 100%;
-        max-width: 250px;
-        margin: 0 auto;
+        padding: 30px 20px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
         transition: all 0.3s ease;
       }
 
       .step:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.05);
       }
 
       .step i {
-        font-size: 36px;
-        color: #0077cc;
-        margin-bottom: 15px;
+        font-size: 32px;
+        color: #3b82f6;
+        margin-bottom: 20px;
       }
 
       .step p {
-        font-size: 18px;
-        font-weight: 600;
+        font-size: 16px;
+        font-weight: 500;
+        color: #e2e8f0;
       }
 
       .cta-section {
         padding: 100px 5%;
         text-align: center;
-        background-color: #ffffff;
+        background-color: #0a0a0a;
       }
 
       .cta-section h2 {
         font-size: 36px;
-        color: #0077cc;
+        color: #ffffff;
         margin-bottom: 30px;
       }
 
       footer {
-        background-color: #222;
-        color: #fff;
+        background-color: #050505;
+        color: #94a3b8;
         padding: 40px 5%;
         text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.05);
       }
 
       footer a {
-        color: #0077cc;
+        color: #3b82f6;
         text-decoration: none;
       }
 
@@ -312,7 +364,7 @@
         }
 
         .hero-section h1 {
-          font-size: 32px;
+          font-size: 40px;
         }
 
         .hero-section p {
@@ -320,14 +372,69 @@
         }
 
         .button {
-          padding: 10px 20px;
-          font-size: 14px;
+          padding: 12px 24px;
+          font-size: 15px;
+        }
+        
+        .banner {
+          margin-top: 60px;
+        }
+      }
+      
+      .tutorial-video {
+        background-color: #0f1115;
+        padding: 80px 5%;
+        text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+      .tutorial-video h2 {
+        font-size: 36px;
+        color: #ffffff;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 40px;
+      }
+      .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+      }
+      .video-container iframe {
+        width: 100%;
+        height: 500px;
+        border: none;
+        display: block;
+      }
+      .tutorial-video p {
+        font-size: 18px;
+        margin-top: 24px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        color: #94a3b8;
+      }
+      @media (max-width: 768px) {
+        .video-container iframe {
+          height: 250px;
         }
       }
     </style>
   </head>
 
   <body>
+    <header>
+      <a href="/" class="logo">
+        <img src="public/logo.png" alt="Logo" class="logo-img" />
+        NFT Sales Alert
+      </a>
+      <a href="https://app.nftsalesalert.com/" class="open-app-btn">Open Web App</a>
+    </header>
     <div
       class="banner"
       role="img"
@@ -336,10 +443,10 @@
 
     <section class="hero-section">
       <div class="hero-content">
-        <h1 style="color: #0077cc">
+        <h1>
           Never Miss a Flip, a Dip, or a Pump Again
         </h1>
-        <p style="font-size: 18px; margin-bottom: 30px">
+        <p>
           NFT Sales Alert is the best Android app for real-time OpenSea
           marketplace notifications. Track NFT collections, get instant sales
           alerts, and monitor floor prices. No wallet connection required - just
@@ -360,7 +467,7 @@
     </section>
 
     <section class="tutorial-video">
-      <h2 style="color: #0077cc">
+      <h2>
         How to Use NFT Sales Alert - OpenSea Notifications Tutorial
       </h2>
       <div class="video-container">
@@ -372,15 +479,7 @@
         >
         </iframe>
       </div>
-      <p
-        style="
-          font-size: 18px;
-          margin-top: 20px;
-          max-width: 800px;
-          margin-left: auto;
-          margin-right: auto;
-        "
-      >
+      <p>
         Watch our quick tutorial to learn how to set up NFT alerts and get the
         most out of the NFT Sales Alert Android app for OpenSea marketplace
         notifications.
@@ -454,10 +553,10 @@
 
     <section class="hero-section blue-bg">
       <div class="hero-content">
-        <h1 style="color: white">
+        <h1>
           Stay Ahead of the NFT Market with Real-Time OpenSea Alerts
         </h1>
-        <p style="color: white; font-size: 18px; margin-bottom: 30px">
+        <p>
           For NFT Creators: Get instant notifications whenever your art sells on
           OpenSea. For NFT Traders: Spot liquidity and volume spikes in
           real-time with our alert system. For NFT Collectors: Monitor floor
