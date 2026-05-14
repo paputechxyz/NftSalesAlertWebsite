@@ -91,9 +91,44 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        display: block;
-        /* improved for accessibility/SEO if image fails to load */
-        background-color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background-color: #0a0a0a;
+        margin-top: 60px;
+      }
+
+      .banner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.8) 100%);
+      }
+
+      .banner-overlay {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 0 20px;
+      }
+
+      .banner-title {
+        font-size: clamp(40px, 8vw, 80px);
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+        letter-spacing: -2px;
+        text-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+      }
+
+      .banner-subtitle {
+        font-size: clamp(18px, 3vw, 24px);
+        color: #94a3b8;
+        margin-top: 10px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
       }
 
       header {
@@ -439,7 +474,12 @@
       class="banner"
       role="img"
       aria-label="NFT Sales Alert App Banner"
-    ></div>
+    >
+      <div class="banner-overlay">
+        <h2 class="banner-title">NFT Sales Alert</h2>
+        <p class="banner-subtitle">Real-Time OpenSea Notifications</p>
+      </div>
+    </div>
 
     <section class="hero-section">
       <div class="hero-content">
