@@ -1,1302 +1,928 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>NFT Sales Alert - Free Real-Time OpenSea Notifications App</title>
-    <meta
-      name="description"
-      content="Get instant NFT sales alerts and notifications from OpenSea. Free Android app to track sales activity and NFT collections in real-time."
-    />
-    <meta
-      name="keywords"
-      content="NFT sales alert, OpenSea notifications, NFT floor price tracker, Android NFT app, NFT price alerts, OpenSea sales bot"
-    />
-    <meta name="author" content="NFT Sales Alert" />
-    <meta name="robots" content="index, follow" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://nftsalesalert.com/" />
-    <meta
-      property="og:title"
-      content="NFT Sales Alert - Real-Time OpenSea Notifications"
-    />
-    <meta
-      property="og:description"
-      content="Never miss a flip. Get instant push notifications for NFT sales on OpenSea."
-    />
-    <meta
-      property="og:image"
-      content="https://nftsalesalert.com/public/og_image.png"
-    />
-
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://nftsalesalert.com/" />
-    <meta
-      property="twitter:title"
-      content="NFT Sales Alert - Real-Time OpenSea Notifications"
-    />
-    <meta
-      property="twitter:description"
-      content="Never miss a flip. Get instant push notifications for NFT sales on OpenSea."
-    />
-    <meta
-      property="twitter:image"
-      content="https://nftsalesalert.com/public/og_image.png"
-    />
-
-    <link rel="canonical" href="https://nftsalesalert.com/" />
-    <link rel="icon" href="public/logo.png" type="image/png" />
-
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-PVL8NYK2J7"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-PVL8NYK2J7");
-    </script>
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <style>
-      :root {
-        --primary-blue: #3b82f6;
-        --primary-blue-hover: #2563eb;
-        --accent-cyan: #06b6d4;
-        --accent-purple: #8b5cf6;
-        --bg-dark: #0a0a0a;
-        --bg-darker: #050505;
-        --bg-light: #0f1115;
-        --text-primary: #ffffff;
-        --text-secondary: #94a3b8;
-        --text-muted: #64748b;
-        --border-color: rgba(255, 255, 255, 0.1);
-        --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --gradient-2: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
-        --gradient-3: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: var(--bg-dark);
-        color: var(--text-primary);
-        line-height: 1.6;
-        overflow-x: hidden;
-        position: relative;
-      }
-
-      /* Animated background */
-      body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: 
-          radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-          radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-          radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
-        z-index: -1;
-        animation: bgFloat 20s ease-in-out infinite;
-      }
-
-      @keyframes bgFloat {
-        0%, 100% { transform: translate(0, 0) rotate(0deg); }
-        33% { transform: translate(-20px, -20px) rotate(1deg); }
-        66% { transform: translate(20px, -10px) rotate(-1deg); }
-      }
-
-      /* Header */
-      header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        background: rgba(10, 10, 10, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border-color);
-        padding: 15px 5%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: all 0.3s ease;
-      }
-
-      header.scrolled {
-        background: rgba(10, 10, 10, 0.95);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-        font-weight: 800;
-        color: var(--text-primary);
-        text-decoration: none;
-        letter-spacing: -0.5px;
-        transition: all 0.3s ease;
-      }
-
-      .logo:hover {
-        transform: scale(1.05);
-      }
-
-      .logo-img {
-        width: 32px;
-        height: 32px;
-        margin-right: 12px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-      }
-
-      .open-app-btn {
-        background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
-        color: #ffffff;
-        padding: 12px 28px;
-        border-radius: 9999px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 14px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-      }
-
-      .open-app-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s ease;
-      }
-
-      .open-app-btn:hover::before {
-        left: 100%;
-      }
-
-      .open-app-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-      }
-
-      /* Banner */
-      .banner {
-        height: 56.25vw;
-        min-height: 400px;
-        max-height: 600px;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        background: linear-gradient(135deg, #001e36 0%, #004d7a 50%, #001e36 100%);
-        margin-top: 60px;
-        overflow: hidden;
-      }
-
-      .banner::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at center, transparent 0%, rgba(0, 30, 54, 0.6) 100%);
-        z-index: 5;
-      }
-
-      .banner-overlay {
-        position: relative;
-        z-index: 10;
-        text-align: center;
-        padding: 0 20px;
-        animation: fadeInUp 1s ease-out;
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .banner-title {
-        font-size: clamp(40px, 8vw, 80px);
-        font-weight: 900;
-        color: #ffffff;
-        margin: 0;
-        letter-spacing: -2px;
-        text-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
-        animation: glow 2s ease-in-out infinite alternate;
-      }
-
-      @keyframes glow {
-        from { text-shadow: 0 0 40px rgba(59, 130, 246, 0.5); }
-        to { text-shadow: 0 0 60px rgba(59, 130, 246, 0.8), 0 0 80px rgba(59, 130, 246, 0.3); }
-      }
-
-      .banner-subtitle {
-        font-size: clamp(18px, 3vw, 24px);
-        color: var(--text-secondary);
-        margin-top: 10px;
-        font-weight: 500;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        animation: fadeInUp 1s ease-out 0.2s both;
-      }
-
-      /* Hero Section */
-      .hero-section {
-        padding: 100px 5% 80px;
-        text-align: center;
-        background-color: var(--bg-dark);
-        position: relative;
-      }
-
-      .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
-        animation: shimmer 3s ease-in-out infinite;
-      }
-
-      @keyframes shimmer {
-        0%, 100% { transform: translateX(-100%); }
-        50% { transform: translateX(100%); }
-      }
-
-      .blue-bg {
-        background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-light) 100%);
-        border-top: 1px solid var(--border-color);
-        position: relative;
-      }
-
-      .blue-bg::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
-        animation: shimmer 4s ease-in-out infinite;
-      }
-
-      .hero-section h1 {
-        font-size: clamp(40px, 6vw, 64px);
-        margin-bottom: 30px;
-        color: var(--text-primary);
-        font-weight: 800;
-        letter-spacing: -1px;
-        line-height: 1.1;
-        position: relative;
-        display: inline-block;
-      }
-
-      .hero-section h1::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-blue), var(--accent-cyan));
-        border-radius: 2px;
-      }
-
-      .hero-section p {
-        color: var(--text-secondary);
-        font-size: 18px;
-        max-width: 700px;
-        margin: 0 auto 40px;
-        opacity: 0;
-        animation: fadeInUp 1s ease-out 0.5s both;
-      }
-
-      .hero-content {
-        max-width: 900px;
-        margin: 0 auto;
-      }
-
-      .button {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
-        color: white;
-        padding: 16px 36px;
-        border-radius: 9999px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-        opacity: 0;
-        animation: fadeInUp 1s ease-out 0.7s both;
-      }
-
-      .button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
-      }
-
-      .button:active {
-        transform: translateY(-1px);
-      }
-
-      /* Tutorial Video */
-      .tutorial-video {
-        background-color: var(--bg-light);
-        padding: 100px 5%;
-        text-align: center;
-        border-top: 1px solid var(--border-color);
-        border-bottom: 1px solid var(--border-color);
-        position: relative;
-      }
-
-      .tutorial-video::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
-        animation: shimmer 5s ease-in-out infinite;
-      }
-
-      .tutorial-video h2 {
-        font-size: clamp(32px, 5vw, 48px);
-        color: var(--text-primary);
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        margin-bottom: 50px;
-        position: relative;
-        display: inline-block;
-      }
-
-      .tutorial-video h2::after {
-        content: '';
-        position: absolute;
-        bottom: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
-        border-radius: 2px;
-      }
-
-      .video-container {
-        position: relative;
-        width: 100%;
-        max-width: 900px;
-        margin: 0 auto 40px;
-        border-radius: 24px;
-        overflow: hidden;
-        border: 2px solid var(--border-color);
-        box-shadow: 
-          0 25px 50px -12px rgba(0, 0, 0, 0.5),
-          0 0 0 1px rgba(59, 130, 246, 0.1);
-        transition: all 0.3s ease;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fadeInUp 1s ease-out 0.3s both;
-      }
-
-      .video-container:hover {
-        transform: translateY(-5px);
-        box-shadow: 
-          0 35px 60px -15px rgba(0, 0, 0, 0.6),
-          0 0 0 1px rgba(59, 130, 246, 0.2);
-      }
-
-      .video-container iframe {
-        width: 100%;
-        height: 500px;
-        border: none;
-        display: block;
-      }
-
-      .tutorial-video p {
-        font-size: 18px;
-        max-width: 800px;
-        margin: 0 auto;
-        color: var(--text-secondary);
-        opacity: 0;
-        animation: fadeInUp 1s ease-out 0.6s both;
-      }
-
-      /* Features */
-      .features {
-        padding: 120px 5%;
-        background-color: var(--bg-dark);
-        text-align: center;
-        position: relative;
-      }
-
-      .features::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.3), transparent);
-        animation: shimmer 6s ease-in-out infinite;
-      }
-
-      .features h2 {
-        font-size: clamp(32px, 5vw, 48px);
-        margin-bottom: 80px;
-        color: var(--text-primary);
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        position: relative;
-        display: inline-block;
-      }
-
-      .features h2::after {
-        content: '';
-        position: absolute;
-        bottom: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-cyan), var(--primary-blue));
-        border-radius: 2px;
-      }
-
-      .feature-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 40px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .feature {
-        padding: 40px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-        border: 1px solid var(--border-color);
-        border-radius: 24px;
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fadeInUp 1s ease-out both;
-      }
-
-      .feature:nth-child(1) { animation-delay: 0.1s; }
-      .feature:nth-child(2) { animation-delay: 0.2s; }
-      .feature:nth-child(3) { animation-delay: 0.3s; }
-      .feature:nth-child(4) { animation-delay: 0.4s; }
-
-      .feature::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-        transition: left 0.6s ease;
-      }
-
-      .feature:hover::before {
-        left: 100%;
-      }
-
-      .feature:hover {
-        transform: translateY(-10px);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-        border-color: rgba(59, 130, 246, 0.3);
-        box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
-      }
-
-      .feature i {
-        font-size: 36px;
-        color: var(--primary-blue);
-        margin-bottom: 30px;
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
-        width: 80px;
-        height: 80px;
-        line-height: 80px;
-        border-radius: 20px;
-        display: inline-block;
-        transition: all 0.3s ease;
-      }
-
-      .feature:hover i {
-        transform: scale(1.1) rotate(5deg);
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(6, 182, 212, 0.2));
-      }
-
-      .feature h3 {
-        font-size: 22px;
-        margin-bottom: 20px;
-        font-weight: 700;
-        color: var(--text-primary);
-      }
-
-      .feature p {
-        color: var(--text-secondary);
-        font-size: 16px;
-        line-height: 1.7;
-      }
-
-      /* How it works */
-      .how-it-works {
-        padding: 120px 5%;
-        background-color: var(--bg-light);
-        text-align: center;
-        border-top: 1px solid var(--border-color);
-        border-bottom: 1px solid var(--border-color);
-        position: relative;
-      }
-
-      .how-it-works::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
-        animation: shimmer 7s ease-in-out infinite;
-      }
-
-      .how-it-works h2 {
-        font-size: clamp(32px, 5vw, 48px);
-        margin-bottom: 80px;
-        color: var(--text-primary);
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        position: relative;
-        display: inline-block;
-      }
-
-      .how-it-works h2::after {
-        content: '';
-        position: absolute;
-        bottom: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 120px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-purple), var(--primary-blue));
-        border-radius: 2px;
-      }
-
-      .steps-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 40px;
-        max-width: 1000px;
-        margin: 0 auto;
-      }
-
-      .step {
-        padding: 40px 30px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-        border: 1px solid var(--border-color);
-        border-radius: 24px;
-        transition: all 0.4s ease;
-        position: relative;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fadeInUp 1s ease-out both;
-      }
-
-      .step:nth-child(1) { animation-delay: 0.2s; }
-      .step:nth-child(2) { animation-delay: 0.4s; }
-      .step:nth-child(3) { animation-delay: 0.6s; }
-
-      .step:hover {
-        transform: translateY(-8px);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-        border-color: rgba(139, 92, 246, 0.3);
-        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.1);
-      }
-
-      .step i {
-        font-size: 36px;
-        color: var(--accent-purple);
-        margin-bottom: 25px;
-        display: inline-block;
-        transition: all 0.3s ease;
-      }
-
-      .step:hover i {
-        transform: scale(1.1) rotate(-5deg);
-        color: var(--accent-cyan);
-      }
-
-      .step p {
-        font-size: 17px;
-        font-weight: 500;
-        color: var(--text-secondary);
-        line-height: 1.6;
-      }
-
-      /* CTA Section */
-      .cta-section {
-        padding: 120px 5%;
-        text-align: center;
-        background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
-        position: relative;
-      }
-
-      .cta-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.3), transparent);
-        animation: shimmer 8s ease-in-out infinite;
-      }
-
-      .cta-section h2 {
-        font-size: clamp(32px, 5vw, 48px);
-        color: var(--text-primary);
-        margin-bottom: 40px;
-        position: relative;
-        display: inline-block;
-      }
-
-      .cta-section h2::after {
-        content: '';
-        position: absolute;
-        bottom: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 150px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-        border-radius: 2px;
-      }
-
-      /* Footer */
-      footer {
-        background-color: var(--bg-darker);
-        color: var(--text-secondary);
-        padding: 60px 5%;
-        text-align: center;
-        border-top: 1px solid var(--border-color);
-        position: relative;
-      }
-
-      footer::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        animation: shimmer 9s ease-in-out infinite;
-      }
-
-      footer p {
-        margin: 10px 0;
-        opacity: 0.8;
-        transition: all 0.3s ease;
-      }
-
-      footer p:hover {
-        opacity: 1;
-        color: var(--text-primary);
-      }
-
-      footer a {
-        color: var(--primary-blue);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        position: relative;
-      }
-
-      footer a::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: var(--primary-blue);
-        transition: width 0.3s ease;
-      }
-
-      footer a:hover::after {
-        width: 100%;
-      }
-
-      footer a:hover {
-        color: var(--accent-cyan);
-        text-decoration: none;
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        .logo-text {
-          display: none;
-        }
-
-        .steps-container {
-          gap: 30px;
-        }
-
-        .feature-container {
-          gap: 30px;
-        }
-
-        .feature {
-          padding: 30px;
-        }
-
-        .step {
-          padding: 30px 20px;
-        }
-
-        .hero-section h1 {
-          font-size: 36px;
-        }
-
-        .hero-section p {
-          font-size: 16px;
-        }
-
-        .button {
-          padding: 14px 28px;
-          font-size: 15px;
-        }
-        
-        .banner {
-          margin-top: 60px;
-        }
-
-        .video-container iframe {
-          height: 250px;
-        }
-
-        .features h2,
-        .how-it-works h2,
-        .tutorial-video h2,
-        .cta-section h2 {
-          font-size: 32px;
-          margin-bottom: 50px;
-        }
-      }
-
-      /* Loading animation */
-      .loading {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--bg-dark);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        transition: opacity 0.5s ease;
-      }
-
-      .loading.hidden {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 3px solid rgba(255, 255, 255, 0.1);
-        border-top: 3px solid var(--primary-blue);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-
-      /* Scroll animations */
-      .scroll-animate {
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.8s ease;
-      }
-
-      .scroll-animate.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      /* Floating animation for elements */
-      .float-animation {
-        animation: float 6s ease-in-out infinite;
-      }
-
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-      }
-
-      /* Pulse animation for important elements */
-      .pulse {
-        animation: pulse 2s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="loading" id="loading">
-      <div class="loading-spinner"></div>
-    </div>
-
-    <header id="header">
-      <a href="/" class="logo">
-        <img src="public/logo.png" alt="Logo" class="logo-img" />
-        <span class="logo-text">NFT Sales Alert</span>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFT Sales Alert — Real-Time OpenSea Sales Alerts</title>
+<meta name="description" content="Get real-time NFT sales alerts and notifications from OpenSea. Free Android app to track sales activity and NFT collections.">
+<meta name="keywords" content="NFT sales alert, OpenSea notifications, NFT floor price tracker, Android NFT app, NFT price alerts, OpenSea sales bot">
+<meta name="author" content="NFT Sales Alert">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://nftsalesalert.com/">
+<link rel="icon" href="public/logo.png" type="image/png">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nftsalesalert.com/">
+<meta property="og:title" content="NFT Sales Alert - Real-Time OpenSea Sales Alerts">
+<meta property="og:description" content="Real-time push notifications for NFT sales on OpenSea. Never miss a sale.">
+<meta property="og:image" content="https://nftsalesalert.com/public/og_image.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://nftsalesalert.com/">
+<meta name="twitter:title" content="NFT Sales Alert - Real-Time OpenSea Sales Alerts">
+<meta name="twitter:description" content="Real-time push notifications for NFT sales on OpenSea. Never miss a sale.">
+<meta name="twitter:image" content="https://nftsalesalert.com/public/og_image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PVL8NYK2J7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag("js", new Date());
+  gtag("config", "G-PVL8NYK2J7");
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "NFT Sales Alert",
+  "description": "Get real-time NFT sales alerts and notifications from OpenSea marketplace. Free Android app for tracking NFT collections, floor prices, and sales activity.",
+  "operatingSystem": "Android",
+  "applicationCategory": "FinanceApplication",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "downloadUrl": "https://play.google.com/store/apps/details?id=com.paputechxyz.openseasales",
+  "author": {
+    "@type": "Organization",
+    "name": "NFT Sales Alert"
+  },
+  "keywords": "NFT alerts, OpenSea notifications, NFT sales tracker, Android NFT app, NFT marketplace alerts"
+}
+</script>
+<style>
+  :root{
+    --bg:#04111D; --bg-2:#07182B; --bg-3:#0A2540;
+    --surface:rgba(255,255,255,.03); --surface-2:rgba(255,255,255,.06);
+    --fg:#EAF2FB; --muted:#93AAC4; --muted-2:#5E7790;
+    --border:rgba(255,255,255,.08); --border-strong:rgba(255,255,255,.14);
+    --accent:#2081E2; --accent-2:#2BD4FF; --accent-soft:rgba(32,129,226,.16); --accent-glow:rgba(32,129,226,.45);
+    --green:#34E08A; --red:#FF5C7A;
+    --font-display:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    --font-body:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    --font-mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    --radius:16px; --radius-lg:26px;
+    --maxw:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font-body);
+    background:var(--bg); color:var(--fg);
+    line-height:1.6; overflow-x:hidden;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .container{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{position:relative}
+
+  /* ---------- Preloader ---------- */
+  #preloader{
+    position:fixed;inset:0;z-index:9999;
+    background:var(--bg);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    gap:22px; transition:opacity .6s ease,visibility .6s ease;
+  }
+  #preloader.hidden{opacity:0;visibility:hidden}
+  .pulse-ring{position:relative;width:64px;height:64px}
+  .pulse-ring::before,.pulse-ring::after,.pulse-ring i{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    border:2px solid var(--accent);
+  }
+  .pulse-ring i{background:radial-gradient(circle,var(--accent) 0%,transparent 70%);animation:corepulse 1.4s ease-in-out infinite}
+  .pulse-ring::before{animation:ringexpand 1.8s ease-out infinite}
+  .pulse-ring::after{animation:ringexpand 1.8s ease-out .6s infinite}
+  @keyframes ringexpand{0%{transform:scale(.5);opacity:.9}100%{transform:scale(2);opacity:0}}
+  @keyframes corepulse{0%,100%{transform:scale(.7);opacity:.6}50%{transform:scale(1);opacity:1}}
+  #preloader p{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+  /* ---------- Background field ---------- */
+  .bg-field{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+  .bg-base{position:absolute;inset:0;
+    background:
+      radial-gradient(900px 700px at 78% -5%, rgba(32,129,226,.22), transparent 60%),
+      radial-gradient(800px 600px at 5% 10%, rgba(43,212,255,.10), transparent 55%),
+      linear-gradient(180deg,#04111D 0%,#05182B 40%,#04111D 100%);
+  }
+  .bg-grid{position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:54px 54px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 80%);
+  }
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;mix-blend-mode:screen}
+  .blob.b1{width:520px;height:520px;background:radial-gradient(circle,var(--accent),transparent 70%);top:-120px;right:-80px;animation:drift1 18s ease-in-out infinite}
+  .blob.b2{width:420px;height:420px;background:radial-gradient(circle,var(--accent-2),transparent 70%);top:40%;left:-140px;animation:drift2 22s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,-40px)}}
+
+  /* ---------- Header ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    transition:background .3s ease,backdrop-filter .3s ease,border-color .3s ease,padding .3s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{
+    background:rgba(4,17,29,.78);backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:17px;letter-spacing:-.02em}
+  .logo-mark{
+    width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 24px rgba(32,129,226,.45);
+    color:#04111D;font-size:18px;
+  }
+  .logo span b{color:var(--accent-2)}
+  .nav-links{display:flex;align-items:center;gap:34px}
+  .nav-links a{font-size:14.5px;font-weight:500;color:var(--muted);transition:color .2s}
+  .nav-links a:hover{color:var(--fg)}
+  .nav-cta{display:flex;align-items:center;gap:12px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-family:inherit;font-weight:600;font-size:14.5px;cursor:pointer;
+    border:none;border-radius:12px;padding:12px 20px;transition:transform .15s ease,box-shadow .2s ease,background .2s;
+    white-space:nowrap;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-ghost{background:rgba(255,255,255,.06);color:var(--fg);border:1px solid var(--border-strong)}
+  .btn-ghost:hover{background:rgba(255,255,255,.1)}
+  .btn-web{background:var(--surface-2);color:var(--fg);border:1px solid var(--accent-soft)}
+  .btn-web:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .btn-play{
+    background:linear-gradient(135deg,var(--accent),#1A6FD0);
+    color:#fff;padding:13px 24px;box-shadow:0 10px 30px rgba(32,129,226,.4);
+  }
+  .btn-play:hover{box-shadow:0 14px 40px rgba(32,129,226,.6);transform:translateY(-2px)}
+  .btn-lg{padding:16px 28px;font-size:15.5px;border-radius:14px}
+
+  .menu-btn{display:none;background:none;border:1px solid var(--border-strong);color:var(--fg);width:42px;height:42px;border-radius:11px;font-size:17px;cursor:pointer}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:140px 0 90px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;
+    background:var(--surface);border:1px solid var(--border-strong);
+    padding:7px 14px;border-radius:100px;font-size:12.5px;font-weight:600;
+    color:var(--accent-2);letter-spacing:.04em;margin-bottom:24px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.4s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+  h1.hero-title{
+    font-family:var(--font-display);font-weight:900;
+    font-size:clamp(38px,5.6vw,68px);line-height:1.04;letter-spacing:-.035em;
+    margin-bottom:22px;
+  }
+  h1.hero-title .grad{
+    background:linear-gradient(120deg,#fff 20%,var(--accent-2) 60%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .hero-sub{font-size:clamp(16px,1.5vw,19px);color:var(--muted);max-width:520px;margin-bottom:34px;line-height:1.65}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:34px}
+  .hero-trust{display:flex;flex-wrap:wrap;gap:18px;color:var(--muted);font-size:13.5px;font-weight:500}
+  .hero-trust span{display:inline-flex;align-items:center;gap:7px}
+  .hero-trust i{color:var(--green)}
+
+  /* Terminal */
+  .terminal-wrap{position:relative}
+  .terminal{
+    position:relative;z-index:3;
+    background:linear-gradient(180deg,rgba(12,30,52,.92),rgba(7,20,38,.95));
+    border:1px solid var(--border-strong);border-radius:var(--radius-lg);
+    box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(32,129,226,.12),inset 0 1px 0 rgba(255,255,255,.06);
+    overflow:hidden;backdrop-filter:blur(6px);
+  }
+  .terminal-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:15px 18px;border-bottom:1px solid var(--border);
+    background:rgba(255,255,255,.02);
+  }
+  .term-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;letter-spacing:-.01em}
+  .term-title .live{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+  .term-title .live b{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.4s infinite}
+  .term-dots{display:flex;gap:7px}
+  .term-dots i{width:11px;height:11px;border-radius:50%;display:block}
+  .term-stats{display:flex;gap:16px;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+  .term-stats b{color:var(--accent-2)}
+  .feed{padding:6px 6px;height:386px;overflow:hidden;position:relative}
+  .feed::after{content:"";position:absolute;left:0;right:0;bottom:0;height:70px;background:linear-gradient(180deg,transparent,rgba(7,20,38,.95));pointer-events:none;z-index:2}
+  .sale-row{
+    display:flex;align-items:center;gap:13px;padding:12px 14px;margin:3px 0;
+    border-radius:12px;background:rgba(255,255,255,.02);
+    border:1px solid transparent;transition:background .3s,border-color .3s;
+    animation:rowin .55s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes rowin{0%{opacity:0;transform:translateY(-14px) scale(.98)}100%{opacity:1;transform:none}}
+  .sale-row.flash{background:rgba(32,129,226,.10);border-color:var(--accent-soft)}
+  .sale-ava{
+    width:40px;height:40px;border-radius:11px;flex-shrink:0;display:grid;place-items:center;
+    font-weight:800;font-size:12px;color:#04111D;letter-spacing:-.02em;
+    border:1px solid rgba(255,255,255,.2);
+  }
+  .sale-main{flex:1;min-width:0}
+  .sale-name{font-weight:700;font-size:14px;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+  .sale-name .tid{color:var(--muted);font-weight:500;font-family:var(--font-mono);font-size:12px}
+  .sale-meta{font-size:12px;color:var(--muted-2);display:flex;align-items:center;gap:8px;margin-top:2px}
+  .sale-meta i{font-size:9px}
+  .sale-price{text-align:right;flex-shrink:0}
+  .sale-price .eth{font-family:var(--font-mono);font-weight:600;font-size:15px;color:var(--accent-2)}
+  .sale-price .usd{font-size:11px;color:var(--muted-2);font-family:var(--font-mono)}
+
+  /* Floating notification cards */
+  .float-card{
+    position:absolute;z-index:4;width:248px;
+    background:linear-gradient(135deg,rgba(16,34,58,.95),rgba(8,22,40,.92));
+    border:1px solid var(--accent-soft);border-radius:16px;padding:13px 14px;
+    box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 30px rgba(32,129,226,.18);
+    backdrop-filter:blur(10px);
+  }
+  .float-card .fc-top{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+  .float-card .fc-ic{
+    width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04111D;font-size:13px;
+  }
+  .float-card .fc-app{font-size:11px;font-weight:700;letter-spacing:.02em;color:var(--muted)}
+  .float-card .fc-time{margin-left:auto;font-size:10.5px;color:var(--muted-2)}
+  .float-card .fc-title{font-weight:700;font-size:13.5px;letter-spacing:-.01em;margin-bottom:2px}
+  .float-card .fc-body{font-size:12px;color:var(--muted);line-height:1.45}
+  .float-card .fc-body b{color:var(--accent-2);font-family:var(--font-mono)}
+  .float-card.fc1{top:-26px;left:-34px;animation:floaty 6s ease-in-out infinite}
+  .float-card.fc2{bottom:-30px;right:-30px;animation:floaty 6s ease-in-out 1.8s infinite}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-14px) rotate(1deg)}}
+
+  /* pulse sparkline */
+  .pulse-strip{margin-top:14px;display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.02)}
+  .pulse-strip .lbl{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  .pulse-strip svg{flex:1;height:30px}
+  .pulse-strip .vol{font-family:var(--font-mono);font-weight:700;font-size:15px;color:var(--accent-2)}
+
+  /* ---------- Section base ---------- */
+  .section{padding:96px 0}
+  .sec-head{text-align:center;max-width:680px;margin:0 auto 56px}
+  .sec-kicker{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h2.sec-title{font-family:var(--font-display);font-weight:800;font-size:clamp(28px,3.6vw,44px);line-height:1.1;letter-spacing:-.03em;margin-bottom:16px}
+  .sec-sub{color:var(--muted);font-size:17px;line-height:1.6}
+
+  /* ---------- Trust strip ---------- */
+  .trust{
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    background:rgba(255,255,255,.015);
+  }
+  .trust-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:30px 0}
+  .trust-item{display:flex;align-items:center;gap:13px;justify-content:center}
+  .trust-item i{font-size:20px;color:var(--accent-2);width:38px;height:38px;display:grid;place-items:center;background:var(--accent-soft);border-radius:11px}
+  .trust-item b{display:block;font-size:14.5px;font-weight:700;letter-spacing:-.01em}
+  .trust-item small{font-size:12.5px;color:var(--muted)}
+
+  /* ---------- Features bento ---------- */
+  .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+  .card{
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+    border:1px solid var(--border);border-radius:var(--radius-lg);padding:30px;
+    position:relative;overflow:hidden;transition:border-color .3s,transform .3s;
+  }
+  .card:hover{border-color:var(--accent-soft);transform:translateY(-4px)}
+  .card .ic{
+    width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-size:20px;
+    background:var(--accent-soft);color:var(--accent-2);margin-bottom:18px;border:1px solid var(--accent-soft);
+  }
+  .card h3{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:9px}
+  .card p{color:var(--muted);font-size:14.5px;line-height:1.6}
+  .card.feat-big{grid-column:span 4;grid-row:span 2;display:flex;flex-direction:column}
+  .card.feat-side{grid-column:span 2}
+  .card.feat-wide{grid-column:span 3}
+
+  /* live alert mock inside big card */
+  .alert-mock{margin-top:22px;border:1px solid var(--border-strong);border-radius:14px;background:rgba(4,17,29,.6);padding:16px;display:flex;gap:13px;align-items:center}
+  .alert-mock .am-ic{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#04111D;font-size:18px;flex-shrink:0}
+  .alert-mock .am-t{font-size:13px;font-weight:700}
+  .alert-mock .am-t .new{color:var(--accent-2)}
+  .alert-mock .am-b{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .alert-mock .am-b b{color:var(--fg);font-family:var(--font-mono)}
+  .alert-mock .am-now{margin-left:auto;font-size:11px;color:var(--green);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+
+  /* privacy card highlight */
+  .card.privacy{background:linear-gradient(150deg,rgba(32,129,226,.12),rgba(255,255,255,.02))}
+  .privacy-shield{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+  .tag{font-size:12px;font-weight:600;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted)}
+  .tag i{color:var(--green);margin-right:5px}
+
+  /* mini chart for analytics */
+  .mini-chart{margin-top:16px;display:flex;align-items:flex-end;gap:5px;height:60px}
+  .mini-chart .bar{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--accent-2),var(--accent));opacity:.85;transition:height .6s ease}
+
+  /* ---------- How it works ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative}
+  .steps::before{
+    content:"";position:absolute;top:42px;left:16%;right:16%;height:2px;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.4;
+  }
+  .step{text-align:center;position:relative}
+  .step-num{
+    width:84px;height:84px;margin:0 auto 22px;border-radius:24px;display:grid;place-items:center;
+    background:linear-gradient(160deg,rgba(32,129,226,.18),rgba(43,212,255,.06));
+    border:1px solid var(--accent-soft);font-size:30px;color:var(--accent-2);
+    position:relative;z-index:2;box-shadow:0 0 40px rgba(32,129,226,.15);
+  }
+  .step h3{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:9px}
+  .step p{color:var(--muted);font-size:14.5px;max-width:280px;margin:0 auto;line-height:1.6}
+  .step .step-tag{display:inline-block;margin-top:14px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2)}
+
+  /* ---------- Audiences ---------- */
+  .aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .aud{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;
+    transition:border-color .3s,transform .3s;position:relative;overflow:hidden;
+  }
+  .aud::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2));opacity:0;transition:opacity .3s}
+  .aud:hover{border-color:var(--accent-soft);transform:translateY(-4px)}
+  .aud:hover::before{opacity:1}
+  .aud .who{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  .aud h3{font-size:21px;font-weight:700;letter-spacing:-.02em;margin-bottom:11px}
+  .aud p{color:var(--muted);font-size:14.5px;line-height:1.6}
+  .aud .ic{font-size:26px;color:var(--accent-2);margin-bottom:18px}
+
+  /* ---------- Tutorial ---------- */
+  .video-wrap{position:relative;max-width:900px;margin:0 auto;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-strong);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(32,129,226,.1)}
+  .video-wrap .ratio{position:relative;padding-top:56.25%}
+  .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video-cap{text-align:center;margin-top:20px;color:var(--muted);font-size:14.5px}
+  .video-cap b{color:var(--fg)}
+
+  /* ---------- Final CTA ---------- */
+  .cta-final{padding:110px 0;text-align:center;position:relative}
+  .cta-card{
+    max-width:760px;margin:0 auto;padding:56px 40px;border-radius:var(--radius-lg);
+    background:
+      radial-gradient(600px 300px at 50% 0%,rgba(32,129,226,.22),transparent 70%),
+      linear-gradient(180deg,rgba(14,32,56,.9),rgba(7,20,38,.95));
+    border:1px solid var(--border-strong);box-shadow:0 30px 80px rgba(0,0,0,.5);
+  }
+  .cta-card h2{font-size:clamp(30px,4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:14px}
+  .cta-card p{color:var(--muted);font-size:17px;margin-bottom:30px}
+  .cta-card .btn-row{display:flex;justify-content:center;flex-wrap:wrap;gap:14px}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--border);padding:46px 0 40px;background:rgba(4,17,29,.6)}
+  .foot{display:flex;flex-direction:column;gap:28px}
+  .foot-top{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+  .foot-brand{max-width:340px}
+  .foot-brand .logo{margin-bottom:14px}
+  .foot-brand p{color:var(--muted);font-size:14px;line-height:1.6}
+  .foot-links{display:flex;gap:60px;flex-wrap:wrap}
+  .foot-col h4{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:14px}
+  .foot-col a{display:block;font-size:14px;color:var(--muted);margin-bottom:10px;transition:color .2s}
+  .foot-col a:hover{color:var(--accent-2)}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:24px;border-top:1px solid var(--border);color:var(--muted-2);font-size:13px}
+  .foot-bottom a{color:var(--muted)}
+  .foot-bottom a:hover{color:var(--accent-2)}
+
+  /* ---------- Reveal animations ---------- */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:980px){
+    .nav-links{display:none}
+    .menu-btn{display:grid;place-items:center}
+    .hero{padding:120px 0 70px}
+    .hero-grid{grid-template-columns:1fr;gap:64px}
+    .float-card.fc1{left:-8px}.float-card.fc2{right:-8px}
+    .bento{grid-template-columns:repeat(2,1fr)}
+    .card.feat-big{grid-column:span 2;grid-row:auto}
+    .card.feat-side{grid-column:span 1}
+    .card.feat-wide{grid-column:span 2}
+    .steps{grid-template-columns:1fr;gap:40px}
+    .steps::before{display:none}
+    .aud-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:680px){
+    .hero{padding:110px 0 50px}
+    .section{padding:72px 0}
+    .trust-inner{grid-template-columns:repeat(2,1fr);gap:24px 12px}
+    .float-card{display:none}
+    .terminal{margin:0 -4px}
+    .bento{grid-template-columns:1fr}
+    .card.feat-big,.card.feat-side,.card.feat-wide{grid-column:span 1}
+    .term-stats{display:none}
+    .foot-links{gap:36px}
+    .nav-cta .btn-web span.lbl{display:none}
+    .cta-card{padding:40px 24px}
+    .feed{height:340px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- Preloader -->
+<div id="preloader" aria-hidden="true">
+  <div class="pulse-ring"><i></i></div>
+  <p>Connecting to the market</p>
+</div>
+
+<!-- Animated background -->
+<div class="bg-field" aria-hidden="true">
+  <div class="bg-base"></div>
+  <div class="bg-grid"></div>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+</div>
+
+<!-- Header -->
+<header id="header">
+  <div class="container nav">
+    <a href="#top" class="logo" aria-label="NFT Sales Alert home">
+      <span class="logo-mark"><i class="fa-solid fa-bell"></i></span>
+      <span>NFT<b>Sales</b>Alert</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#audiences">Who it's for</a>
+      <a href="#tutorial">Tutorial</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-web" href="https://app.nftsalesalert.com/" target="_blank" rel="noopener">
+        <i class="fa-solid fa-globe"></i><span class="lbl">Open Web App</span>
       </a>
-      <a href="https://app.nftsalesalert.com/" class="open-app-btn">
-        <i class="fas fa-rocket"></i> Open Web App
-      </a>
-    </header>
-
-    <div
-      class="banner"
-      aria-label="NFT Sales Alert App Banner"
-    >
-      <canvas id="particle-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></canvas>
-      <div class="banner-overlay">
-        <h2 class="banner-title">NFT Sales Alert</h2>
-        <p class="banner-subtitle">Real-Time OpenSea Notifications</p>
-      </div>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
     </div>
+  </div>
+</header>
 
-    <section class="hero-section scroll-animate">
-      <div class="hero-content">
-        <h1>
-          Never Miss a Flip, a Dip, or a Pump Again
-        </h1>
-        <p>
-          NFT Sales Alert is the best Android app for real-time OpenSea
-          marketplace notifications. Track NFT collections and get instant sales
-          alerts. No wallet connection required - just search, watch, and get
-          notified of every NFT sale.
-        </p>
-        <div class="cta">
-          <a
-            href="https://play.google.com/store/apps/details?id=com.paputechxyz.openseasales"
-            class="button"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Download NFT Sales Alert on Google Play"
-          >
-            <i class="fa-brands fa-google-play"></i>
-            <span>Download on Google Play</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="tutorial-video scroll-animate">
-      <h2>
-        How to Use NFT Sales Alert - OpenSea Notifications Tutorial
-      </h2>
-      <div class="video-container">
-        <iframe
-          src="https://www.youtube.com/embed/0yeGFxzyuLw"
-          title="NFT Sales Alert Tutorial - OpenSea Notifications Android App"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        >
-        </iframe>
-      </div>
-      <p>
-        Watch our quick tutorial to learn how to set up NFT alerts and get the
-        most out of the NFT Sales Alert Android app for OpenSea marketplace
-        notifications.
-      </p>
-    </section>
-
-    <section class="features scroll-animate">
-      <h2>Why Choose NFT Sales Alert for OpenSea Notifications?</h2>
-      <div class="feature-container">
-        <div class="feature">
-          <i class="fa-solid fa-shield-halved"></i>
-          <h3>100% Safe & Private</h3>
-          <p>
-            Start tracking immediately with no account sign-up and absolutely no
-            wallet connection needed. Your assets stay safe while you track the
-            market.
-          </p>
-        </div>
-
-        <div class="feature">
-          <i class="fa-solid fa-bell"></i>
-          <h3>Instant NFT Sales Alerts & Notifications</h3>
-          <p>
-            Get immediate push notifications when any NFT sells on OpenSea. View
-            the NFT information, sale price, and transaction details within the
-            Android app.
-          </p>
-        </div>
-
-        <div class="feature">
-          <i class="fa-solid fa-chart-line"></i>
-          <h3>Live NFT Market Watchlist & Collection Tracker</h3>
-          <p>
-            Build a personalized NFT watchlist of the collections that matter to
-            you. Track blue-chip NFT projects, trending PFPs, gaming assets, or
-            emerging artists with real-time OpenSea alerts.
-          </p>
-        </div>
-
-        <div class="feature">
-          <i class="fa-solid fa-chart-bar"></i>
-          <h3>NFT Historical Sales Data & Price Analytics</h3>
-          <p>
-            View recent NFT sales history to spot volume trends, floor price
-            action, and buyer momentum before you make a move in the OpenSea
-            marketplace.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="how-it-works scroll-animate">
-      <h2>How NFT Sales Alert Works - 3 Simple Steps</h2>
-      <div class="steps-container">
-        <div class="step">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <p>Search & discover any NFT collection on OpenSea marketplace</p>
-        </div>
-
-        <div class="step">
-          <i class="fa-solid fa-plus"></i>
-          <p>Add NFT collections to your personalized alert watchlist</p>
-        </div>
-
-        <div class="step">
-          <i class="fa-solid fa-bell"></i>
-          <p>Receive instant NFT sales notifications & alerts on Android</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="hero-section blue-bg scroll-animate">
-      <div class="hero-content">
-        <h1>
-          Stay Ahead of the NFT Market with Real-Time OpenSea Alerts
-        </h1>
-        <p>
-          For NFT Creators: Get instant notifications whenever your art sells on
-          OpenSea. For NFT Traders: Spot liquidity and volume spikes in
-          real-time with our alert system. For NFT Collectors: Monitor sales
-          activity of your favorite collections.
-        </p>
-        <div class="cta">
-          <a
-            href="https://play.google.com/store/apps/details?id=com.paputechxyz.openseasales"
-            class="button"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Download NFT Sales Alert on Google Play"
-          >
-            <i class="fa-brands fa-google-play"></i>
-            <span>Download on Google Play</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <p>
-        <i class="fa-regular fa-copyright"></i> 2026 NFT Sales Alert - OpenSea
-        Notifications Android App. All rights reserved.
-      </p>
-      <p>
-        <a
-          href="https://nftsalesalert.com/privacy-policy.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <i class="fa-solid fa-shield-halved"></i> Privacy Policy
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="container hero-grid">
+    <div class="hero-text reveal">
+      <span class="eyebrow"><span class="dot"></span> Live OpenSea sales feed</span>
+      <h1 class="hero-title">Every NFT sale.<br><span class="grad">In real time.</span></h1>
+      <p class="hero-sub">Real-time push notifications the moment any NFT sells on OpenSea — sale price, collection, and transaction details, delivered straight to your phone. No wallet. No account. No friction.</p>
+      <div class="hero-cta">
+        <a class="btn btn-play btn-lg" href="https://play.google.com/store/apps/details?id=com.paputechxyz.openseasales" target="_blank" rel="noopener">
+          <i class="fa-brands fa-google-play"></i> Download on Google Play
         </a>
-      </p>
-      <p><i class="fa-solid fa-envelope"></i> Contact: paputechxyz@gmail.com</p>
+        <a class="btn btn-ghost btn-lg" href="https://app.nftsalesalert.com/" target="_blank" rel="noopener">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Web App
+        </a>
+      </div>
+      <div class="hero-trust">
+        <span><i class="fa-solid fa-check"></i> 100% free</span>
+        <span><i class="fa-solid fa-check"></i> No sign-up</span>
+        <span><i class="fa-solid fa-check"></i> No wallet needed</span>
+      </div>
+    </div>
 
-      <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "MobileApplication",
-          "name": "NFT Sales Alert",
-          "description": "Get instant NFT sales alerts and notifications from OpenSea marketplace. Free Android app for tracking NFT collections, floor prices, and sales activity.",
-          "operatingSystem": "Android",
-          "applicationCategory": "FinanceApplication",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-          },
-          "downloadUrl": "https://play.google.com/store/apps/details?id=com.paputechxyz.openseasales",
-          "author": {
-            "@type": "Organization",
-            "name": "NFT Sales Alert"
-          },
-          "keywords": "NFT alerts, OpenSea notifications, NFT sales tracker, Android NFT app, NFT marketplace alerts"
-        }
-      </script>
-    </footer>
+    <div class="terminal-wrap reveal d2">
+      <!-- floating push notifications -->
+      <div class="float-card fc1" aria-hidden="true">
+        <div class="fc-top">
+          <div class="fc-ic"><i class="fa-solid fa-bell"></i></div>
+          <div class="fc-app">NFT Sales Alert</div>
+          <div class="fc-time">now</div>
+        </div>
+        <div class="fc-title">Sale detected</div>
+        <div class="fc-body">CryptoPunks #4231 sold for <b>48.2 ETH</b></div>
+      </div>
+      <div class="float-card fc2" aria-hidden="true">
+        <div class="fc-top">
+          <div class="fc-ic"><i class="fa-solid fa-bell"></i></div>
+          <div class="fc-app">NFT Sales Alert</div>
+          <div class="fc-time">2s ago</div>
+        </div>
+        <div class="fc-title">Watchlist hit</div>
+        <div class="fc-body">Azuki #6890 sold for <b>9.4 ETH</b></div>
+      </div>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+      <!-- live terminal -->
+      <div class="terminal">
+        <div class="terminal-head">
+          <div class="term-title">
+            <span class="term-dots"><i style="background:#FF5C7A"></i><i style="background:#FFB454"></i><i style="background:#34E08A"></i></span>
+            OpenSea · Live Sales
+            <span class="live"><b></b> Live</span>
+          </div>
+          <div class="term-stats">
+            <span>24h vol <b id="volStat">4,212 ETH</b></span>
+            <span>sales/min <b id="rateStat">38</b></span>
+          </div>
+        </div>
+        <div class="feed" id="feed" aria-label="Live NFT sales feed (illustrative)"></div>
+      </div>
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyAFwrbEe042psqbBZTi9ZPqnL7tsX6ZCkQ",
-        authDomain: "nft-sales-38208.firebaseapp.com",
-        projectId: "nft-sales-38208",
-        storageBucket: "nft-sales-38208.firebasestorage.app",
-        messagingSenderId: "1081812286827",
-        appId: "1:1081812286827:web:9f25fb38ae7b1032e8602e",
-        measurementId: "G-PVL8NYK2J7",
-      };
+      <div class="pulse-strip">
+        <span class="lbl">Market pulse</span>
+        <svg viewBox="0 0 200 30" preserveAspectRatio="none" id="sparkline" aria-hidden="true">
+          <polyline points="" fill="none" stroke="#2BD4FF" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+          <polyline points="" fill="none" stroke="#2BD4FF" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" opacity=".4"/>
+        </svg>
+        <span class="vol" id="pulseVol">▲ 2.4%</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
+<!-- Trust strip -->
+<section class="trust">
+  <div class="container">
+    <div class="trust-inner">
+      <div class="trust-item reveal"><i class="fa-solid fa-bolt"></i><div><b>Real-time alerts</b><small>as each sale clears</small></div></div>
+      <div class="trust-item reveal d1"><i class="fa-solid fa-user-shield"></i><div><b>Zero account</b><small>nothing to sign up for</small></div></div>
+      <div class="trust-item reveal d2"><i class="fa-solid fa-wallet"></i><div><b>No wallet</b><small>never connect a thing</small></div></div>
+      <div class="trust-item reveal d3"><i class="fa-solid fa-lock"></i><div><b>100% private</b><small>your data stays yours</small></div></div>
+    </div>
+  </div>
+</section>
 
-      // Loading screen
-      window.addEventListener('load', function() {
-        setTimeout(() => {
-          document.getElementById('loading').classList.add('hidden');
-        }, 1000);
+<!-- Features -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">What you get</span>
+      <h2 class="sec-title">A real-time window onto the entire OpenSea market</h2>
+      <p class="sec-sub">Built for people who can't afford to find out about a sale ten minutes late. Every signal you need, none of the friction.</p>
+    </div>
+
+    <div class="bento">
+      <div class="card feat-big reveal">
+        <div class="ic"><i class="fa-solid fa-bell"></i></div>
+        <h3>Real-time sales alerts</h3>
+        <p>The moment any NFT sells on OpenSea, a push notification lands on your phone — with the collection, sale price in ETH, and full transaction details. No refresh, no polling, no delay.</p>
+        <div class="alert-mock">
+          <div class="am-ic"><i class="fa-solid fa-bolt"></i></div>
+          <div>
+            <div class="am-t"><span class="new">●</span> New sale · Bored Ape Yacht Club</div>
+            <div class="am-b">Ape <b>#7214</b> just sold for <b>24.5 ETH</b></div>
+          </div>
+          <div class="am-now">just now</div>
+        </div>
+      </div>
+
+      <div class="card feat-side privacy reveal d1">
+        <div class="ic"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3>No wallet. No account.</h3>
+        <p>Start tracking the moment the app opens. Nothing to connect, nothing to create.</p>
+        <div class="privacy-shield">
+          <span class="tag"><i class="fa-solid fa-check"></i> No wallet</span>
+          <span class="tag"><i class="fa-solid fa-check"></i> No login</span>
+          <span class="tag"><i class="fa-solid fa-check"></i> 100% private</span>
+        </div>
+      </div>
+
+      <div class="card feat-side reveal d2">
+        <div class="ic"><i class="fa-solid fa-bookmark"></i></div>
+        <h3>Personal watchlist</h3>
+        <p>Follow blue-chips, trending PFPs, gaming collections, or emerging artists — and get pinged only for what matters to you.</p>
+      </div>
+
+      <div class="card feat-wide reveal d1">
+        <div class="ic"><i class="fa-solid fa-chart-line"></i></div>
+        <h3>Historical data & analytics</h3>
+        <p>Recent sales history, floor-price movement, volume trends, and buyer momentum — so you can read the market, not just react to it.</p>
+        <div class="mini-chart" id="miniChart" aria-hidden="true"></div>
+      </div>
+
+      <div class="card feat-wide reveal d2">
+        <div class="ic"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+        <h3>Coverage across OpenSea</h3>
+        <p>Every collection, every sale, every time. From headline blue-chips to the collections that haven't broken out yet — nothing trades without you knowing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">How it works</span>
+      <h2 class="sec-title">Live alerts in three steps</h2>
+      <p class="sec-sub">From install to your first notification in under a minute.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <h3>Search a collection</h3>
+        <p>Find any collection on OpenSea — by name, by trend, or from your watchlist.</p>
+        <span class="step-tag">Step 01</span>
+      </div>
+      <div class="step reveal d1">
+        <div class="step-num"><i class="fa-solid fa-plus"></i></div>
+        <h3>Add to watchlist</h3>
+        <p>Tap to follow. Stack as many collections as you want — no limits, no account.</p>
+        <span class="step-tag">Step 02</span>
+      </div>
+      <div class="step reveal d2">
+        <div class="step-num"><i class="fa-solid fa-bell"></i></div>
+        <h3>Get real-time alerts</h3>
+        <p>A push notification fires when a sale clears. That's it — you're plugged in.</p>
+        <span class="step-tag">Step 03</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Audiences -->
+<section class="section" id="audiences">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">Built for</span>
+      <h2 class="sec-title">Whoever you are in this market</h2>
+      <p class="sec-sub">Different reasons to watch. Same promise: never miss the moment.</p>
+    </div>
+    <div class="aud-grid">
+      <div class="aud reveal">
+        <div class="ic"><i class="fa-solid fa-palette"></i></div>
+        <div class="who">For creators</div>
+        <h3>Know the second your art sells</h3>
+        <p>Stop refreshing. The moment a collector buys your piece, you're the first to know — and the first to celebrate.</p>
+      </div>
+      <div class="aud reveal d1">
+        <div class="ic"><i class="fa-solid fa-arrows-up-down"></i></div>
+        <div class="who">For traders</div>
+        <h3>Spot liquidity before the crowd</h3>
+        <p>Watch volume spikes and floor movement in real time. React to momentum while everyone else is still loading the page.</p>
+      </div>
+      <div class="aud reveal d2">
+        <div class="ic"><i class="fa-solid fa-gem"></i></div>
+        <div class="who">For collectors</div>
+        <h3>Track what you love, around the clock</h3>
+        <p>Follow your favourite collections and never miss a listing, a sale, or a shift in the market again.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tutorial -->
+<section class="section" id="tutorial">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">See it in action</span>
+      <h2 class="sec-title">How to use NFT Sales Alert</h2>
+      <p class="sec-sub">A 60-second walkthrough — from install to your first live alert.</p>
+    </div>
+    <div class="video-wrap reveal">
+      <div class="ratio">
+        <iframe src="https://www.youtube.com/embed/0yeGFxzyuLw" title="How to Use NFT Sales Alert" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+    <p class="video-cap reveal d1">Prefer the web? <a href="https://app.nftsalesalert.com/" target="_blank" rel="noopener" style="color:var(--accent-2)"><b>Open the web app →</b></a></p>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="cta-final">
+  <div class="container">
+    <div class="cta-card reveal">
+      <h2>Never miss a sale again.</h2>
+      <p>Free on Android. No wallet, no account, no catch — just the live market, in your pocket.</p>
+      <div class="btn-row">
+        <a class="btn btn-play btn-lg" href="https://play.google.com/store/apps/details?id=com.paputechxyz.openseasales" target="_blank" rel="noopener">
+          <i class="fa-brands fa-google-play"></i> Download on Google Play
+        </a>
+        <a class="btn btn-ghost btn-lg" href="https://app.nftsalesalert.com/" target="_blank" rel="noopener">
+          <i class="fa-solid fa-globe"></i> Open Web App
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container foot">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="#top" class="logo">
+          <span class="logo-mark"><i class="fa-solid fa-bell"></i></span>
+          <span>NFT<b>Sales</b>Alert</span>
+        </a>
+        <p>Real-time push alerts for every NFT sale on OpenSea. Free, private, and always on — for creators, traders, and collectors.</p>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h4>Product</h4>
+          <a href="https://play.google.com/store/apps/details?id=com.paputechxyz.openseasales" target="_blank" rel="noopener">Google Play</a>
+          <a href="https://app.nftsalesalert.com/" target="_blank" rel="noopener">Web App</a>
+          <a href="#features">Features</a>
+          <a href="#tutorial">Tutorial</a>
+        </div>
+        <div class="foot-col">
+          <h4>Legal</h4>
+          <a href="https://nftsalesalert.com/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>
+          <a href="mailto:paputechxyz@gmail.com">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 NFT Sales Alert. All rights reserved.</span>
+      <span><a href="https://nftsalesalert.com/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> · <a href="mailto:paputechxyz@gmail.com">paputechxyz@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Preloader ---------- */
+  window.addEventListener("load", function(){
+    setTimeout(function(){
+      var p = document.getElementById("preloader");
+      if(p) p.classList.add("hidden");
+    }, 650);
+  });
+
+  /* ---------- Header scroll state ---------- */
+  var header = document.getElementById("header");
+  function onScroll(){
+    if(window.scrollY > 24) header.classList.add("scrolled");
+    else header.classList.remove("scrolled");
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+
+  /* ---------- Mobile menu: smooth-jump nav ---------- */
+  var menuBtn = document.getElementById("menuBtn");
+  if(menuBtn){
+    menuBtn.addEventListener("click", function(){
+      var targets = ["#features","#how","#audiences","#tutorial"];
+      var i = 0;
+      // simple cycle through sections for quick mobile jump
+      var current = Math.floor(window.scrollY / (document.body.scrollHeight / targets.length));
+      var next = targets[(current) % targets.length];
+      var el = document.querySelector(next);
+      if(el) window.scrollTo({top: el.offsetTop - 80, behavior:"smooth"});
+    });
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12, rootMargin:"0px 0px -40px 0px"});
+  document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
+
+  /* ---------- Live sales ticker ---------- */
+  var COLLECTIONS = [
+    {n:"Bored Ape Yacht Club", s:"BAYC", p:[18,32], h:208},
+    {n:"CryptoPunks", s:"PUNK", p:[28,75], h:90},
+    {n:"Azuki", s:"AZUK", p:[5,14], h:350},
+    {n:"Mutant Ape Yacht Club", s:"MAYC", p:[8,18], h:280},
+    {n:"Pudgy Penguins", s:"PPG", p:[6,15], h:195},
+    {n:"Doodles", s:"DOOD", p:[3,9], h:265},
+    {n:"Otherdeed", s:"OTHR", p:[1,5], h:140},
+    {n:"Moonbirds", s:"MBRD", p:[3,8], h:160},
+    {n:"Clone X", s:"CLNX", p:[2,7], h:300},
+    {n:"World of Women", s:"WOW", p:[1,5], h:330},
+    {n:"Cool Cats", s:"COOL", p:[1,4], h:220},
+    {n:"Veefriends", s:"VEEF", p:[2,9], h:30}
+  ];
+  var feed = document.getElementById("feed");
+  var MAX_ROWS = 6;
+  var ethUsd = 3200; // illustrative
+
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+  function pad(n){ return n<10?"0"+n:n; }
+
+  function buildRow(){
+    var c = COLLECTIONS[Math.floor(Math.random()*COLLECTIONS.length)];
+    var price = rand(c.p[0], c.p[1]);
+    var tokenId = Math.floor(rand(100,9999));
+    var secs = Math.floor(rand(1,40));
+    var usd = price * ethUsd;
+    var usdStr = usd > 9999 ? (usd/1000).toFixed(1)+"k" : Math.round(usd);
+
+    var row = document.createElement("div");
+    row.className = "sale-row flash";
+    var grad = "linear-gradient(135deg, hsl("+c.h+" 80% 55%), hsl("+((c.h+40)%360)+" 75% 45%))";
+    row.innerHTML =
+      '<div class="sale-ava" style="background:'+grad+'">'+c.s+'</div>'+
+      '<div class="sale-main">'+
+        '<div class="sale-name">'+c.n+' <span class="tid">#'+tokenId+'</span></div>'+
+        '<div class="sale-meta"><i class="fa-solid fa-circle"></i> sold · '+secs+'s ago</div>'+
+      '</div>'+
+      '<div class="sale-price">'+
+        '<div class="eth">'+price.toFixed(2)+' ETH</div>'+
+        '<div class="usd">$'+usdStr+'</div>'+
+      '</div>';
+    setTimeout(function(){ row.classList.remove("flash"); }, 1400);
+    return row;
+  }
+
+  function pushSale(){
+    if(!feed) return;
+    var row = buildRow();
+    feed.insertBefore(row, feed.firstChild);
+    while(feed.children.length > MAX_ROWS){
+      feed.removeChild(feed.lastChild);
+    }
+    bumpStats();
+  }
+
+  function bumpStats(){
+    var vol = document.getElementById("volStat");
+    var rate = document.getElementById("rateStat");
+    var pv = document.getElementById("pulseVol");
+    if(vol){
+      var cur = parseFloat(vol.textContent.replace(/[, ETH]/g,""));
+      cur += rand(2,9);
+      vol.textContent = cur.toLocaleString(undefined,{maximumFractionDigits:0}) + " ETH";
+    }
+    if(rate){
+      rate.textContent = Math.round(rand(28,52));
+    }
+    if(pv){
+      var pct = rand(-1.5,3.8);
+      pv.innerHTML = (pct>=0?"▲ ":"▼ ")+Math.abs(pct).toFixed(1)+"%";
+      pv.style.color = pct>=0 ? "var(--green)" : "var(--red)";
+    }
+  }
+
+  /* seed feed */
+  if(feed){
+    for(var i=0;i<MAX_ROWS;i++){
+      var r = buildRow(); r.classList.remove("flash");
+      feed.appendChild(r);
+    }
+    // shuffle initial "time ago" ordering visually by reversing
+    var interval = setInterval(pushSale, 2200);
+    // pause when offscreen to save cycles
+    var feedIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ if(interval) return; interval = setInterval(pushSale, 2200); }
+        else { clearInterval(interval); interval = null; }
       });
+    }, {threshold:0});
+    feedIO.observe(feed);
+  }
 
-      // Header scroll effect
-      window.addEventListener('scroll', function() {
-        const header = document.getElementById('header');
-        if (window.scrollY > 100) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
-      });
+  /* ---------- Sparkline ---------- */
+  (function(){
+    var svg = document.getElementById("sparkline");
+    if(!svg) return;
+    var polys = svg.querySelectorAll("polyline");
+    function gen(pts){
+      var arr=[], n=40, v=15;
+      for(var i=0;i<n;i++){ v += rand(-3,3.2); v = Math.max(4, Math.min(26, v)); arr.push((i/(n-1))*200+","+v.toFixed(1)); }
+      pts.setAttribute("points", arr.join(" "));
+    }
+    gen(polys[0]); gen(polys[1]);
+    setInterval(function(){
+      gen(polys[0]); gen(polys[1]);
+    }, 2600);
+  })();
 
-      // Scroll animations
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
+  /* ---------- Mini chart (analytics card) ---------- */
+  (function(){
+    var mc = document.getElementById("miniChart");
+    if(!mc) return;
+    var n=14, bars=[];
+    for(var i=0;i<n;i++){
+      var b = document.createElement("div");
+      b.className="bar";
+      b.style.height = (rand(20,95))+"%";
+      mc.appendChild(b); bars.push(b);
+    }
+    setInterval(function(){
+      for(var i=0;i<n;i++){ bars[i].style.height = rand(20,95)+"%"; }
+    }, 2200);
+  })();
 
-      const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, observerOptions);
+})();
+</script>
 
-      document.querySelectorAll('.scroll-animate').forEach(el => {
-        observer.observe(el);
-      });
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
 
-      // Download button tracking
-      document.addEventListener("DOMContentLoaded", function () {
-        const downloadButtons = document.querySelectorAll(
-          'a[href*="play.google.com"]'
-        );
+  const firebaseConfig = {
+    apiKey: "AIzaSyAFwrbEe042psqbBZTi9ZPqnL7tsX6ZCkQ",
+    authDomain: "nft-sales-38208.firebaseapp.com",
+    projectId: "nft-sales-38208",
+    storageBucket: "nft-sales-38208.firebasestorage.app",
+    messagingSenderId: "1081812286827",
+    appId: "1:1081812286827:web:9f25fb38ae7b1032e8602e",
+    measurementId: "G-PVL8NYK2J7",
+  };
 
-        downloadButtons.forEach((button) => {
-          button.addEventListener("click", function (e) {
-            gtag("event", "click", {
-              event_category: "Download",
-              event_label: "Google Play Store",
-              value: 1,
-            });
-          });
-        });
-
-        // Enhanced 3D Ocean Wave Mesh System
-        const canvas = document.getElementById("particle-canvas");
-        if (canvas) {
-          const ctx = canvas.getContext("2d");
-          let width, height;
-          let time = 0;
-          
-          function resize() {
-            width = canvas.clientWidth;
-            height = canvas.clientHeight;
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
-            ctx.scale(dpr, dpr);
-          }
-          
-          window.addEventListener("resize", resize);
-          resize();
-          
-          function animate() {
-            ctx.clearRect(0, 0, width, height);
-            
-            time += 0.006;
-            
-            // Enhanced perspective parameters
-            const fov = 350;
-            
-            // Grid sizing
-            const spacingX = 65;
-            const spacingZ = 50;
-            const rows = 45;
-            
-            const offsetZ = -60;
-            
-            // Calculate minimum scale at the far horizon
-            const maxZ = rows * spacingZ + offsetZ;
-            const minScale = fov / (fov + maxZ);
-            const requiredWorldWidth = width / minScale;
-            const cols = Math.ceil(requiredWorldWidth / spacingX) + 10;
-            
-            // Center the grid horizontally
-            const offsetX = (cols * spacingX) / 2;
-            
-            // Pre-calculate all projected points
-            let points = [];
-            for (let z = 0; z < rows; z++) {
-              let rowPoints = [];
-              for (let x = 0; x < cols; x++) {
-                let worldX = x * spacingX - offsetX;
-                let worldZ = z * spacingZ + offsetZ;
-                
-                if (worldZ < -fov + 10) worldZ = -fov + 10;
-                
-                // Enhanced wave functions
-                let wave1 = Math.sin(x * 0.1 - z * 0.1 - time * 2.5) * 45;
-                let wave2 = Math.sin(x * 0.05 - z * 0.08 - time * 1.5) * 20;
-                let wave3 = Math.sin(x * 0.08 - z * 0.12 - time * 1.8) * 15;
-                
-                let worldY = 280 + wave1 + wave2 + wave3;
-                
-                // 3D perspective projection
-                let scale = fov / (fov + worldZ);
-                
-                let screenX = width / 2 + worldX * scale;
-                let screenY = height / 2 - 120 + worldY * scale;
-                
-                rowPoints.push({
-                  x: screenX,
-                  y: screenY,
-                  scale: scale
-                });
-              }
-              points.push(rowPoints);
-            }
-            
-            // Enhanced drawing with multiple layers
-            for (let z = 0; z < rows; z++) {
-              for (let x = 0; x < cols; x++) {
-                let p = points[z][x];
-                
-                if (p.scale <= 0) continue;
-                
-                // Enhanced depth cueing
-                let alpha = Math.min(1, Math.max(0, p.scale * 1.8 - 0.2));
-                
-                ctx.lineWidth = 1;
-                
-                // Layer 1: Main wireframe
-                ctx.strokeStyle = `rgba(0, 230, 255, ${alpha * 0.45})`;
-                
-                if (x < cols - 1) {
-                  let right = points[z][x+1];
-                  ctx.beginPath();
-                  ctx.moveTo(p.x, p.y);
-                  ctx.lineTo(right.x, right.y);
-                  ctx.stroke();
-                }
-                
-                if (z < rows - 1) {
-                  let bottom = points[z+1][x];
-                  ctx.beginPath();
-                  ctx.moveTo(p.x, p.y);
-                  ctx.lineTo(bottom.x, bottom.y);
-                  ctx.stroke();
-                }
-                
-                // Layer 2: Enhanced glowing nodes
-                ctx.fillStyle = `rgba(0, 255, 230, ${alpha * 0.9})`;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 2 * p.scale, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Layer 3: Additional glow effect
-                if (p.scale > 0.3) {
-                  ctx.fillStyle = `rgba(59, 130, 246, ${alpha * 0.3})`;
-                  ctx.beginPath();
-                  ctx.arc(p.x, p.y, 4 * p.scale, 0, Math.PI * 2);
-                  ctx.fill();
-                }
-              }
-            }
-            
-            requestAnimationFrame(animate);
-          }
-          
-          animate();
-        }
-      });
-    </script>
-  </body>
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+</body>
 </html>
